@@ -1,0 +1,15 @@
+with sum_price as(select p.product_id, p.price * u.units as 'sum_price_unit', u.units as 'unit' from
+Prices as p
+left join UnitsSold u
+on p.product_id=u.product_id and
+ u.purchase_date BETWEEN p.start_date AND p.end_date)
+
+ select product_id, 
+ case
+ when round(sum(sum_price_unit)/ sum(unit),2) is null then 0
+ else round(sum(sum_price_unit)/ sum(unit),2) 
+ end as 'average_price' from sum_price
+  group by 1
+
+
+
